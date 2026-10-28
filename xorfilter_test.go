@@ -18,7 +18,7 @@ func TestBasic(t *testing.T) {
 	for i := range keys {
 		keys[i] = splitmix64(&rng)
 	}
-	filter, _ := Populate(keys)
+	filter, _ := Populate(keys, 1024)
 	for _, v := range keys {
 		assert.Equal(t, true, filter.Contains(v))
 	}
@@ -45,7 +45,7 @@ func TestBasic(t *testing.T) {
 		for i := range keys {
 			keys[i] = splitmix64(&rng)
 		}
-		filter, _ = Populate(keys)
+		filter, _ = Populate(keys, 1024)
 		for _, v := range keys {
 			assert.Equal(t, true, filter.Contains(v))
 		}
@@ -57,7 +57,7 @@ func TestSmall(t *testing.T) {
 	for i := range keys {
 		keys[i] = splitmix64(&rng)
 	}
-	filter, _ := Populate(keys)
+	filter, _ := Populate(keys, 1024)
 	for _, v := range keys {
 		assert.Equal(t, true, filter.Contains(v))
 	}
@@ -80,7 +80,7 @@ func TestSmall(t *testing.T) {
 		for i := range keys {
 			keys[i] = splitmix64(&rng)
 		}
-		filter, _ = Populate(keys)
+		filter, _ = Populate(keys, 1024)
 		for _, v := range keys {
 			assert.Equal(t, true, filter.Contains(v))
 		}
@@ -99,7 +99,7 @@ func BenchmarkPopulate100000(b *testing.B) {
 			keys[i] = splitmix64(&rng)
 		}
 		b.StartTimer()
-		Populate(keys)
+		Populate(keys, 1024)
 	}
 }
 
@@ -113,7 +113,7 @@ func encode(v1, v2 int32) []byte {
 // credit: el10savio
 func Test_DuplicateKeys(t *testing.T) {
 	keys := []uint64{1, 77, 31, 241, 303, 303}
-	_, err := Populate(keys)
+	_, err := Populate(keys, 1024)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
@@ -125,7 +125,7 @@ func BenchmarkContains100000(b *testing.B) {
 	for i := range keys {
 		keys[i] = splitmix64(&rng)
 	}
-	filter, _ := Populate(keys)
+	filter, _ := Populate(keys, 1024)
 
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -153,7 +153,7 @@ func BenchmarkConstructXor8(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 	for n := 0; n < b.N; n++ {
-		Populate(bigrandomarray)
+		Populate(bigrandomarray, 1024)
 	}
 }
 
@@ -165,7 +165,7 @@ func xor8bigInit() {
 	for i := range keys {
 		keys[i] = rand.Uint64()
 	}
-	xor8big, _ = Populate(keys)
+	xor8big, _ = Populate(keys, 1024)
 	fmt.Println("Xor8 setup ok")
 }
 
@@ -185,7 +185,7 @@ func TestFSDIssue35_basic(t *testing.T) {
 		v := encode(int32(rand.Intn(10)), int32(rand.Intn(100000)))
 		hashes = append(hashes, xxhash.Sum64(v))
 	}
-	inner, err := Populate(hashes)
+	inner, err := Populate(hashes, 1024)
 	if err != nil {
 		panic(err)
 	}
@@ -205,7 +205,7 @@ func Test_Issue35_basic(t *testing.T) {
 			v := encode(int32(rand.Intn(10)), int32(rand.Intn(100000)))
 			hashes = append(hashes, xxhash.Sum64(v))
 		}
-		inner, err := PopulateBinaryFuse8(hashes)
+		inner, err := PopulateBinaryFuse8(hashes, 1024)
 		if err != nil {
 			panic(err)
 		}

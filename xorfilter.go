@@ -107,13 +107,10 @@ func resetSets(setsi []xorset) []xorset {
 	return setsi
 }
 
-// The maximum  number of iterations allowed before the populate function returns an error
-var MaxIterations = 1024
-
 // Populate fills the filter with provided keys. For best results,
 // the caller should avoid having too many duplicated keys.
 // The function may return an error if the set is empty.
-func Populate(keys []uint64) (*Xor8, error) {
+func Populate(keys []uint64, maxIterations int) (*Xor8, error) {
 	size := len(keys)
 	if size == 0 {
 		return nil, errors.New("provide a non-empty set")
@@ -140,7 +137,7 @@ func Populate(keys []uint64) (*Xor8, error) {
 
 	for {
 		iterations += 1
-		if iterations > MaxIterations {
+		if iterations > maxIterations {
 			// The probability of this happening is lower than the
 			// the cosmic-ray probability (i.e., a cosmic ray corrupts your system).
 			return nil, errors.New("too many iterations")

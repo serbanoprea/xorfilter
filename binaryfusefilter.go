@@ -23,7 +23,7 @@ type BinaryFuse[T Unsigned] struct {
 // NewBinaryFuse fills the filter with provided keys. For best results,
 // the caller should avoid having too many duplicated keys.
 // The function may return an error if the set is empty.
-func NewBinaryFuse[T Unsigned](keys []uint64) (*BinaryFuse[T], error) {
+func NewBinaryFuse[T Unsigned](keys []uint64, maxIterations int) (*BinaryFuse[T], error) {
 	size := uint32(len(keys))
 	filter := &BinaryFuse[T]{}
 	filter.initializeParameters(size)
@@ -49,7 +49,7 @@ func NewBinaryFuse[T Unsigned](keys []uint64) (*BinaryFuse[T], error) {
 	iterations := 0
 	for {
 		iterations += 1
-		if iterations > MaxIterations {
+		if iterations > maxIterations {
 			// The probability of this happening is lower than the
 			// the cosmic-ray probability (i.e., a cosmic ray corrupts your system).
 			return nil, errors.New("too many iterations")

@@ -5,8 +5,8 @@ type BinaryFuse8 BinaryFuse[uint8]
 // PopulateBinaryFuse8 fills the filter with provided keys. For best results,
 // the caller should avoid having too many duplicated keys.
 // The function may return an error if the set is empty.
-func PopulateBinaryFuse8(keys []uint64) (*BinaryFuse8, error) {
-	filter, err := NewBinaryFuse[uint8](keys)
+func PopulateBinaryFuse8(keys []uint64, maxIterations int) (*BinaryFuse8, error) {
+	filter, err := NewBinaryFuse[uint8](keys, maxIterations)
 	if err != nil {
 		return nil, err
 	}
