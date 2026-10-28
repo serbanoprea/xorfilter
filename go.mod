@@ -1,4 +1,4 @@
-module github.com/tnako/xorfilter
+module github.com/serbanoprea/xorfilter
 
 go 1.22
 
